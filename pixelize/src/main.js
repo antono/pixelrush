@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import { loadFonts } from './plugins/webfontloader'
 
-createApp(App).mount('#app')
+loadFonts()
+
+createApp(App)
+  .mount('#app')

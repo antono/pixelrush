@@ -1,23 +1,22 @@
+
 <template>
   <section class="canvars-container">
     <div class="canvas-controls">
-      <div>
-        <label for="x">X</label>
-        <input v-model="inputCoords.x" type="number" min="0" max="1000" name="x" id="x"/>
-      </div>
-      <div>
-        <label for="y">Y</label>
-        <input v-model="inputCoords.y" type="number" min="0" max="1000"  name="y" id="y"/>
-      </div>
-      <button @click="capturePoint()" type="button">Own</button>
+      <ColorPicker :visible-formats="['rgb']" @color-change="updateColor"></ColorPicker>
+      <button @click="submitCoordinatesForm()" type="button">Own</button>
     </div>
     <canvas id="c" width="1000" height="1000"></canvas>
   </section>
 </template>
 
 <script>
+import { ColorPicker } from 'vue-accessible-color-picker'
+
 export default {
   name: 'HelloWorld',
+  components: {
+    ColorPicker,
+  },
   data() {
     return {
       canvas: null,
@@ -25,7 +24,8 @@ export default {
       inputCoords: {
         x: 0,
         y: 0,
-      }
+      },
+      inputColor: [255,255,255]
     }
   },
   mounted() {
@@ -33,6 +33,7 @@ export default {
     var ctx = c.getContext("2d");
     this.canvas = ctx;
     this.drawEmpty();
+    document.getElementsByTagName('canvas')[0].addEventListener('click', this.onCanvasClick.bind(this))
   },
   methods: {
     drawEmpty: function() {
@@ -50,21 +51,36 @@ export default {
       // }
     },
     drawPoint: function(coordinates, color) {
+      const {x,y} = coordinates;
       this.canvas.strokeStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
       this.imageData.data[0] = color[0];
       this.imageData.data[1] = color[1];
       this.imageData.data[2] = color[2];
-      this.canvas.putImageData(this.imageData, coordinates.x, coordinates.y);
+      for(var i = x; i < x + 10; i++) {
+        for(var j = y; j < y + 10; j++) {
+          this.canvas.putImageData(this.imageData, i, j);
+        }
+      }
+    },
+    updateColor: function(e) {
+      this.inputColor = [e.colors.rgb.r * 256,e.colors.rgb.g * 256,e.colors.rgb.b * 256]
     },
     getRandomColor: () => Array.apply(null, Array(3)).map(() => Math.floor(Math.random() * 256)),
-    capturePoint: function () {
+    capturePoint: function (coordinates, color) {
       if(!this.isOwned(this.inputCoords)) {
-        this.drawPoint(this.inputCoords, [123,32,42]);
+        this.drawPoint(coordinates, color);
       } else {
         alert('already owned');
       }
     },
+    submitCoordinatesForm: function () {
+      this.capturePoint(this.inputCoords, this.inputColor);
+    },
     isOwned: () => false,
+    onCanvasClick: function (e) {
+      console.log(this.inputColor);
+      this.capturePoint({x: e.offsetX, y: e.offsetY}, this.inputColor);
+    }
   }
 }
 </script>

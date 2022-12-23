@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="692a5516-5d9a-449e-95d9-2d62ade9c12c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pixelize/src/plugins/webfontloader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/src/components/HelloWorld.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pixelize/vue.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/pixelize/vue.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +48,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671723770214</updated>
-      <workItem from="1671723771746" duration="8339000" />
+      <workItem from="1671723771746" duration="10612000" />
     </task>
     <servers />
   </component>
