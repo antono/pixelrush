@@ -11,6 +11,7 @@
 
 <script>
 import { ColorPicker } from 'vue-accessible-color-picker'
+import axios from 'axios';
 
 export default {
   name: 'HelloWorld',
@@ -39,27 +40,16 @@ export default {
     drawEmpty: function() {
       this.canvas.clearRect(0, 0, 1000, 1000);
       this.imageData = this.canvas.createImageData(1, 1);
-      var color = this.getRandomColor();
-      console.log(color);
-      this.canvas.strokeStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-      this.imageData.data[0] = color[0];
-      this.imageData.data[1] = color[1];
-      this.imageData.data[2] = color[2];
       this.imageData.data[3] = 255;
-      // for(var i = 120; i < 550; i++) {
-        this.canvas.putImageData(this.imageData, 0, 0);
-      // }
     },
-    drawPoint: function(coordinates, color) {
-      const {x,y} = coordinates;
-      this.canvas.strokeStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-      this.imageData.data[0] = color[0];
-      this.imageData.data[1] = color[1];
-      this.imageData.data[2] = color[2];
-      for(var i = x; i < x + 10; i++) {
-        for(var j = y; j < y + 10; j++) {
-          this.canvas.putImageData(this.imageData, i, j);
-        }
+    drawArea: function(pixels) {
+      for(const pixel of pixels) {
+        const {color: rgb} = pixel;
+        this.canvas.strokeStyle = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+        this.imageData.data[0] = rgb[0];
+        this.imageData.data[1] = rgb[1];
+        this.imageData.data[2] = rgb[2];
+        this.canvas.putImageData(this.imageData, pixel.coordinates[0], pixel.coordinates[1]);
       }
     },
     updateColor: function(e) {
@@ -67,16 +57,31 @@ export default {
     },
     getRandomColor: () => Array.apply(null, Array(3)).map(() => Math.floor(Math.random() * 256)),
     capturePoint: function (coordinates, color) {
-      if(!this.isOwned(this.inputCoords)) {
-        this.drawPoint(coordinates, color);
-      } else {
-        alert('already owned');
-      }
+        const area = this.calcuateArea(coordinates, color);
+        axios.post('/pixels/create_bulk', {
+          range: area,
+          color: this.inputColor
+        }).then(this.getAndDrawAll());
+        this.drawArea(area);
+    },
+    getAndDrawAll: function() {
+      axios.get('/pixels').then(r => {
+          this.drawArea(r);
+      })
     },
     submitCoordinatesForm: function () {
       this.capturePoint(this.inputCoords, this.inputColor);
     },
-    isOwned: () => false,
+    calcuateArea: function (coordinates, color) {
+      const {x,y} = coordinates;
+      const area = [];
+      for(var i = x; i < x + 5; i++) {
+        for(var j = y; j < y + 5; j++) {
+          area.push({coordinates: [i,j], color});
+        }
+      }
+      return area;
+    },
     onCanvasClick: function (e) {
       console.log(this.inputColor);
       this.capturePoint({x: e.offsetX, y: e.offsetY}, this.inputColor);
